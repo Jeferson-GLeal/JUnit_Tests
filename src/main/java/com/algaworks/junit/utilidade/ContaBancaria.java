@@ -8,19 +8,17 @@ public class ContaBancaria {
 
     public ContaBancaria(BigDecimal saldo) {
         if (saldo == null) {
-            throw new IllegalArgumentException("O saldo esta nulo");
-        } else {
-            this.saldo = saldo;
+            throw new IllegalArgumentException("Valor inválido");
         }
-
+        this.saldo = saldo;
     }
 
     public void saque(BigDecimal valor) {
-
-        if (valor == null) {
-            throw new IllegalArgumentException("O saldo esta nulo");
-        } else if (this.saldo.compareTo(valor) < 0) {
-            throw new RuntimeException("Saldo insuficiente.");
+        if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor inválido");
+        }
+        if (this.saldo.compareTo(valor) < 0) {
+            throw new RuntimeException("Saldo insuficiente");
         }
         this.saldo = this.saldo.subtract(valor);
     }
