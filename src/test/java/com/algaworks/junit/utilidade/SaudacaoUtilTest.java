@@ -1,6 +1,7 @@
 package com.algaworks.junit.utilidade;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,34 +9,59 @@ class SaudacaoUtilTest {
 
     @Test
     public void saudarBomDia() {
-        String saudacao = SaudacaoUtil.saudar(9);
+        int horaValida = 9;
+        String saudacao = SaudacaoUtil.saudar(horaValida);
         assertEquals("Bom dia", saudacao, "Saudacao invalida");
     }
 
     @Test
     public void saudarBoaTarde() {
-        String saudacao = SaudacaoUtil.saudar(14);
+        //Arrange
+        int horaValida = 14;
+
+        //Act
+        String saudacao = SaudacaoUtil.saudar(horaValida);
+
+        //Assert
         assertEquals("Boa tarde", saudacao, "Saudacao invalida");
     }
 
     @Test
     public void saudarBoaNoite() {
-        String saudacao = SaudacaoUtil.saudar(19);
+        //Arrange
+        int horaValida = 19;
+
+        //Act
+        String saudacao = SaudacaoUtil.saudar(horaValida);
+
+        //Assert
         assertEquals("Boa noite", saudacao, "Saudacao invalida");
     }
 
     @Test
     public void deveLancarException() {
 
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
-                () -> SaudacaoUtil.saudar(-10));
+        //Arrange
+        int horaInvalida = -10;
 
-        assertEquals("Hora invalida", illegalArgumentException.getMessage());
+        //Act
+        Executable executable = () -> SaudacaoUtil.saudar(horaInvalida);
 
+        //Assert
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("Hora invalida", e.getMessage());
     }
 
     @Test
     public void naoDeveLancarException() {
-        assertDoesNotThrow(() -> SaudacaoUtil.saudar(0));
+
+        //Arrange
+        int horaValida = 0;
+
+        //Act
+        Executable executable = () -> SaudacaoUtil.saudar(horaValida);
+
+        //Assert
+        assertDoesNotThrow(executable);
     }
 }
