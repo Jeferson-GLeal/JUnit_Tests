@@ -1,13 +1,16 @@
 package com.algaworks.junit.utilidade;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Testes unitario de saudacao")
 class SaudacaoUtilTest {
 
     @Test
+    @DisplayName("Deve saudar com bom dia")
     public void saudarBomDia() {
         int horaValida = 9;
         String saudacao = SaudacaoUtil.saudar(horaValida);
@@ -15,6 +18,7 @@ class SaudacaoUtilTest {
     }
 
     @Test
+    @DisplayName("Deve saudar com boa tarde")
     public void saudarBoaTarde() {
         //Arrange
         int horaValida = 14;
@@ -27,6 +31,7 @@ class SaudacaoUtilTest {
     }
 
     @Test
+    @DisplayName("Deve saudar com boa noite")
     public void saudarBoaNoite() {
         //Arrange
         int horaValida = 19;
@@ -39,6 +44,7 @@ class SaudacaoUtilTest {
     }
 
     @Test
+    @DisplayName("Deve lancar uma Exception")
     public void deveLancarException() {
 
         //Arrange
@@ -53,6 +59,7 @@ class SaudacaoUtilTest {
     }
 
     @Test
+    @DisplayName("Nao deve lancar uma Exception")
     public void naoDeveLancarException() {
 
         //Arrange
