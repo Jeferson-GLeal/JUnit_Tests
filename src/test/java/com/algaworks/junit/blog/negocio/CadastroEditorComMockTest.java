@@ -5,29 +5,38 @@ import com.algaworks.junit.blog.armazenamento.ArmazenamentoEditor;
 import com.algaworks.junit.blog.exception.RegraNegocioException;
 import com.algaworks.junit.blog.modelo.Editor;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoException;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@ExtendWith(MockitoExtension.class)
 class CadastroEditorComMockTest {
 
-    CadastroEditor cadastroEditor;
     Editor editor;
+
+    @Mock
+    ArmazenamentoEditor armazenamentoEditor;
+
+    @Mock
+    GerenciadorEnvioEmail gerenciadorEnvioEmail;
+
+    @InjectMocks
+    CadastroEditor cadastroEditor;
 
     @BeforeEach
     void init() {
         editor = new Editor(null, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
 
-        ArmazenamentoEditor armazenamentoEditor = Mockito.mock(ArmazenamentoEditor.class);
         Mockito.when(armazenamentoEditor.salvar(editor))
                 .thenReturn(new Editor(1L, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true));
-
-        GerenciadorEnvioEmail gerenciadorEnvioEmail = Mockito.mock(GerenciadorEnvioEmail.class);
-
-        cadastroEditor = new CadastroEditor(armazenamentoEditor, gerenciadorEnvioEmail);
     }
 
 
