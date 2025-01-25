@@ -35,7 +35,7 @@ class CadastroEditorComMockTest {
     void init() {
         editor = new Editor(null, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
 
-        Mockito.when(armazenamentoEditor.salvar(editor))
+        Mockito.when(armazenamentoEditor.salvar(Mockito.any(Editor.class)))
                 //.thenReturn(new Editor(1L, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true));
                 .thenAnswer(invocacao -> {
                     Editor editorPassado = invocacao.getArgument(0, Editor.class);
@@ -44,10 +44,16 @@ class CadastroEditorComMockTest {
                 });
     }
 
-
     @Test
     void Dado_ume_ditor_valido_Quando_criar_Entao_deve_retornar_um_id_de_cadastro() {
         Editor editoSalvo = cadastroEditor.criar(editor);
         Assertions.assertEquals(1L, editoSalvo.getId());
+    }
+
+    @Test
+    void Dado_um_editor_valido_Quando_criar_Entao_deve_chamar_metodo_salvar_do_armazenamento() {
+        cadastroEditor.criar(editor);
+        Mockito.verify(armazenamentoEditor, Mockito.times(1))
+                .salvar(Mockito.eq(editor));
     }
 }
