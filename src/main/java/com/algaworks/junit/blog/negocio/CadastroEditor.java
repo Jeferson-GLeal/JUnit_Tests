@@ -21,6 +21,7 @@ public class CadastroEditor {
         Objects.requireNonNull(editor);
 
         verificarSeExisteEditorUsandoMesmoEmail(editor);
+
         editor = armazenamentoEditor.salvar(editor);
         enviarEmailDeCadastro(editor);
 
