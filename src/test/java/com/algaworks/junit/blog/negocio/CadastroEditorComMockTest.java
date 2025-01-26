@@ -1,6 +1,7 @@
 package com.algaworks.junit.blog.negocio;
 
 import com.algaworks.junit.blog.armazenamento.ArmazenamentoEditor;
+import com.algaworks.junit.blog.exception.EditorNaoEncontradoException;
 import com.algaworks.junit.blog.exception.RegraNegocioException;
 import com.algaworks.junit.blog.modelo.Editor;
 import org.junit.jupiter.api.*;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
@@ -140,6 +141,22 @@ class CadastroEditorComMockTest {
             InOrder inOrder = Mockito.inOrder(editor, armazenamentoEditor);
             inOrder.verify(editor).atualizarComDados(editorAtualizado);
             inOrder.verify(armazenamentoEditor).salvar(editor);
+        }
+    }
+
+    @Nested
+    class EdicaoComEditorInexistente {
+        Editor editor = new Editor(99L, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
+
+        @BeforeEach
+        void init() {
+            Mockito.when(armazenamentoEditor.encontrarPorId(99L)).thenReturn(Optional.empty());
+        }
+
+        @Test
+        void Dado_um_editor_que_nao_existe_Quando_editar_Entao_deve_lancar_exception() {
+            assertThrows(EditorNaoEncontradoException.class, () -> cadastroEditor.editar(editor));
+            verify(armazenamentoEditor, never()).salvar(Mockito.any(Editor.class));
         }
     }
 }
