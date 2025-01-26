@@ -96,4 +96,12 @@ class CadastroEditorComMockTest {
 
         assertThrows(RegraNegocioException.class, () -> cadastroEditor.criar(editorComEmailExistente));
     }
+
+    @Test
+    void Dado_um_editor_valido_Quando_cadastrar_Entao_deve_enviar_email_apos_salvar() {
+        cadastroEditor.criar(editor);
+        InOrder inOrder = Mockito.inOrder(armazenamentoEditor, gerenciadorEnvioEmail);
+        inOrder.verify(armazenamentoEditor, Mockito.times(1)).salvar(editor);
+        inOrder.verify(gerenciadorEnvioEmail,Mockito.times(1)).enviarEmail(Mockito.any(Mensagem.class));
+    }
 }
