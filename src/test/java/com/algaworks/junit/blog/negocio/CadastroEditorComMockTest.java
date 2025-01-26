@@ -35,7 +35,7 @@ class CadastroEditorComMockTest {
     class CadastroComEditorValido {
 
         @Spy
-        Editor editor = EditorTestData.umEditorNovo();
+        Editor editor = EditorTestData.umEditorNovo().build();
 
         @BeforeEach
         void init() {
@@ -93,7 +93,7 @@ class CadastroEditorComMockTest {
             Mockito.when(armazenamentoEditor.encontrarPorEmail("jeferson.gleal@outlook.com"))
                     .thenReturn(Optional.empty())
                     .thenReturn(Optional.of(editor));
-            Editor editorComEmailExistente = EditorTestData.umEditorExistente();
+            Editor editorComEmailExistente = EditorTestData.umEditorExistente().build();
 
             cadastroEditor.criar(editor);
 
@@ -124,7 +124,7 @@ class CadastroEditorComMockTest {
     class EdicaoComEditorValido {
 
         @Spy
-        Editor editor = EditorTestData.umEditorExistente();
+        Editor editor = EditorTestData.umEditorExistente().build();
 
         @BeforeEach
         void init() {
@@ -134,9 +134,10 @@ class CadastroEditorComMockTest {
 
         @Test
         void Dado_um_edito_valido_Quando_editar_Entao_deve_alterar_editor_salvo() {
-            Editor editorAtualizado = EditorTestData.umEditorExistente();
-                    editorAtualizado.setEmail("jeferson.leal@outlook.com");
-                    editorAtualizado.setNome("Jeferson Leal");
+            Editor editorAtualizado = EditorTestData.umEditorExistente()
+                    .withEmail("jeferson.leal@outlook.com")
+                    .withName("Jeferson Leal")
+                    .build();
 
             cadastroEditor.editar(editorAtualizado);
             Mockito.verify(editor, times(1)).atualizarComDados(editorAtualizado);
@@ -149,7 +150,7 @@ class CadastroEditorComMockTest {
 
     @Nested
     class EdicaoComEditorInexistente {
-        Editor editor = EditorTestData.umEditorComIdInexistente();
+        Editor editor = EditorTestData.umEditorComIdInexistente().build();
 
         @BeforeEach
         void init() {
