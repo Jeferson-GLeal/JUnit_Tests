@@ -12,13 +12,11 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
 class CadastroEditorComMockTest {
-
-    @Spy
-    Editor editor = new Editor(null, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
 
     @Captor
     ArgumentCaptor<Mensagem> mensagemArgumentCaptor;
@@ -34,6 +32,10 @@ class CadastroEditorComMockTest {
 
     @Nested
     class CadastroComEditorValido {
+
+        @Spy
+        Editor editor = new Editor(null, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
+
         @BeforeEach
         void init() {
             Mockito.when(armazenamentoEditor.salvar(Mockito.any(Editor.class)))
@@ -54,7 +56,7 @@ class CadastroEditorComMockTest {
         @Test
         void Dado_um_editor_valido_Quando_criar_Entao_deve_chamar_metodo_salvar_do_armazenamento() {
             cadastroEditor.criar(editor);
-            Mockito.verify(armazenamentoEditor, Mockito.times(1))
+            Mockito.verify(armazenamentoEditor, times(1))
                     .salvar(Mockito.eq(editor));
         }
 
@@ -101,8 +103,8 @@ class CadastroEditorComMockTest {
         void Dado_um_editor_valido_Quando_cadastrar_Entao_deve_enviar_email_apos_salvar() {
             cadastroEditor.criar(editor);
             InOrder inOrder = Mockito.inOrder(armazenamentoEditor, gerenciadorEnvioEmail);
-            inOrder.verify(armazenamentoEditor, Mockito.times(1)).salvar(editor);
-            inOrder.verify(gerenciadorEnvioEmail,Mockito.times(1)).enviarEmail(Mockito.any(Mensagem.class));
+            inOrder.verify(armazenamentoEditor, times(1)).salvar(editor);
+            inOrder.verify(gerenciadorEnvioEmail, times(1)).enviarEmail(Mockito.any(Mensagem.class));
         }
     }
 
@@ -117,4 +119,27 @@ class CadastroEditorComMockTest {
         }
     }
 
+    @Nested
+    class EdicaoComEditorValido {
+
+        @Spy
+        Editor editor = new Editor(null, "Jeferson", "jeferson.gleal@outlook.com", BigDecimal.TEN, true);
+
+        @BeforeEach
+        void init() {
+            Mockito.when(armazenamentoEditor.salvar(editor)).thenAnswer(invocacao -> invocacao.getArgument(0, Editor.class));
+            Mockito.when(armazenamentoEditor.encontrarPorId(1L)).thenReturn(Optional.of(editor));
+        }
+
+        @Test
+        void Dado_um_edito_valido_Quando_editar_Entao_deve_alterar_editor_salvo() {
+            Editor editorAtualizado = new Editor(1L, "Jeferson Leal", "jeferson.leal@outlook.com", BigDecimal.ZERO, false);
+            cadastroEditor.editar(editorAtualizado);
+            Mockito.verify(editor, times(1)).atualizarComDados(editorAtualizado);
+
+            InOrder inOrder = Mockito.inOrder(editor, armazenamentoEditor);
+            inOrder.verify(editor).atualizarComDados(editorAtualizado);
+            inOrder.verify(armazenamentoEditor).salvar(editor);
+        }
+    }
 }
